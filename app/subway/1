@@ -1,0 +1,155 @@
+package subway
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"mercury/app/utils"
+	"net/http"
+	"time"
+)
+
+type Subway struct {
+	LineName           string `json:"lineName" binding:"required"`
+	SnapshotWeekOffset int    `json:"snapshotWeekOffset" binding:"-"`
+	StationName        string `json:"stationName" binding:"required"`
+	EnterDate          string `json:"enterDate" binding:"required"`
+	SnapshotTimeSlot   string `json:"snapshotTimeSlot" binding:"required"`
+	TimeSlot           string `json:"timeSlot" binding:"required"`
+}
+
+const layout = "2006-01-02 15:04:05"
+
+func getEnterDate() string {
+	now := time.Now()
+	tt, _ := time.ParseDuration("24h")
+	dd := now.Add(tt)
+	return dd.Format("20060102")
+}
+
+func isStart() (bool, error) {
+	time1 := time.Now().Format("2006-01-02 ") + "11:59:59"
+	time2 := time.Now().Format("2006-01-02 ") + "13:00:00"
+	time3 := time.Now().Format("2006-01-02 ") + "19:59:59"
+	now := time.Now().Format(layout)
+	fmt.Println(now)
+	t1, err1 := time.Parse(layout, time1)
+	t2, err2 := time.Parse(layout, time2)
+	t3, err3 := time.Parse(layout, time3)
+	nw, err4 := time.Parse(layout, now)
+	if err1 != nil && err2 != nil && err3 != nil && err4 != nil {
+		return false, nil
+	}
+	// 上午
+	if nw.Before(t2) {
+		return t1.Before(nw), nil
+	} else {
+		return t3.Before(nw), nil
+	}
+	// 下午
+}
+func getParams(timeSlot string) (*bytes.Buffer, error) {
+	enterDate := getEnterDate()
+	params := &Subway{
+		LineName:           "昌平线",
+		EnterDate:          enterDate,
+		SnapshotTimeSlot:   "0630-0930",
+		SnapshotWeekOffset: 0,
+		StationName:        "沙河站",
+		TimeSlot:           timeSlot,
+	}
+	json, err := json.Marshal(params)
+	if err != nil {
+		fmt.Println("err---<", err)
+		return nil, err
+	}
+	// bytes.NewBuffer 是一个缓冲byte类型的缓冲器，这个缓冲器里面存放的都是byte
+	return bytes.NewBuffer(json), err
+	//return string(json), err
+}
+
+func request(jsonStr *bytes.Buffer) {
+	req, err := http.NewRequest("POST", "https://webapi.mybti.cn/Appointment/CreateAppointment", jsonStr)
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "YzNhZmJiZDctZDMzNC00MGQ4LWIzMDItMmQyMWI1ZjdhZWU2LDE2NDM2MjA1ODMxNjUsN3gxcW14bzB3Nzl2U0ZlOWNxNENvemZYWlp3PQ==")
+	req.Header.Add("Origin", "https://webui.mybti.cn")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Errored when sending request to the server")
+		return
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("err---<", err)
+		return
+	}
+	var data interface{} // TopTracks
+	err = json.Unmarshal(body, &data)
+	fmt.Println("success---->", data)
+	defer resp.Body.Close()
+}
+
+func myChannel(id int, timeSlot string) {
+	go func() {
+		ticker := time.NewTicker(1 * time.Second)
+		defer ticker.Stop()
+
+		var count = 0
+		for range ticker.C {
+			isBegin, _ := isStart()
+			if isBegin {
+				count++
+				params, _ := getParams(timeSlot)
+				request(params)
+				if count == 2 {
+					ticker.Stop()
+				}
+			}
+		}
+	}()
+}
+
+func Start() {
+	//myChannel(1, "0740-0750")
+
+	//myChannel(2, "0630-0640")
+	//myChannel(3, "0750-0800")
+
+	params, _ := getStringParams("0740-0750")
+	fmt.Println("start", params)
+	r, err := utils.HTTPPost("https://webapi.mybti.cn/Appointment/CreateAppointment", params)
+
+	var m map[string]string
+	{
+
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "YzNhZmJiZDctZDMzNC00MGQ4LWIzMDItMmQyMWI1ZjdhZWU2LDE2NDM2MjA1ODMxNjUsN3gxcW14bzB3Nzl2U0ZlOWNxNENvemZYWlp3PQ==")
+	req.Header.Add("Origin", "https://webui.mybti.cn")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(r)
+}
+
+func getStringParams(timeSlot string) (string, error) {
+	enterDate := getEnterDate()
+	params := &Subway{
+		LineName:           "昌平线",
+		EnterDate:          enterDate,
+		SnapshotTimeSlot:   "0630-0930",
+		SnapshotWeekOffset: 0,
+		StationName:        "沙河站",
+		TimeSlot:           timeSlot,
+	}
+	json, err := json.Marshal(params)
+	if err != nil {
+		fmt.Println("err---<", err)
+		return "", err
+	}
+	// bytes.NewBuffer 是一个缓冲byte类型的缓冲器，这个缓冲器里面存放的都是byte
+	return string(json), err
+}

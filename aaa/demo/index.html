@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试上传文件</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+
+</head>
+<body>
+<form action="/update-profile" method="post">
+    <input type="file" name="picture" />
+    <button type="submit">Submit</button>
+</form>
+
+<canvas id="canvas"></canvas>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.0/axios.min.js"></script>
+
+<script>
+    const form = document.querySelector("form");
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'green';
+    ctx.fillRect(10, 10, 150, 100);
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const canvas = document.getElementById("canvas");
+        canvas.toBlob((blob) => {
+            let file = new File([blob], "fileName.jpg", { type: "image/jpeg" })
+            const formData = new FormData()
+            formData.append("resource", file)
+            axios.defaults.withCredentials = true;
+            axios.post('http://10.236.168.252:8085/upload_canvas',
+                formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            ).then(function () {
+                console.log('SUCCESS!!');
+            })
+            console.log(file)
+        }, 'image/jpeg');
+
+        // const formData = new FormData(form);
+        // // You should have a server side REST API
+        // console.log(formData.get("picture"))
+        // axios.post('http://localhost:8085/upload_canvas',
+        //     formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     }
+        // ).then(function () {
+        //     console.log('SUCCESS!!');
+        // }).catch(function () {
+        //     console.log('FAILURE!!');
+        // });
+
+    });
+
+    function change(model, array) {
+        model.name = 'in side'
+        array.push('D')
+    }
+    function notChange(model, array) {
+        model = {key: 'not'}
+        array = [1, 2, 3]
+    }
+    function global() {
+        let obj = {name: 'global'},
+            obj1 = {name: 'global-1'},
+            arr = ['a', 'b', 'c'],
+            arr1 = ['a', 'b', 'c']
+
+        change(obj, arr)
+        notChange(obj1, arr1)
+        console.log(obj, arr)
+        console.log(obj1, arr1)
+    }
+    global()
+
+</script>
+</body>
+</html>
