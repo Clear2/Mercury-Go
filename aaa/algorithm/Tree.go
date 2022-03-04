@@ -35,16 +35,8 @@ func main() {
 	//inorder(&node1)
 	//result := inorderTraverSal(&node1)
 	//fmt.Println(result)
-	fmt.Println(isSameTree(&node1, &nodeb))
-	arr := []int{0, 1, 2}
-	m := map[int]int{2: 2, 3: 3}
-	Change(arr, m)
-	fmt.Println(arr, m)
-}
+	fmt.Println(mergeTrees(&node1, &nodeb))
 
-func Change(arr []int, m map[int]int) {
-	arr = append(arr, 4)
-	m[0] = 1
 }
 
 /*
@@ -77,3 +69,26 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 	}
 	return false
 }
+
+// 合并两个二叉树
+func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
+	if root1 == nil && root2 == nil {
+		return root1
+	}
+	if root1 == nil {
+		return root2
+	}
+	if root2 == nil {
+		return root1
+	}
+
+	newTree := &TreeNode{Val: root1.Val + root2.Val}
+	newTree.Left = mergeTrees(root1.Left, root2.Left)
+	newTree.Right = mergeTrees(root1.Right, root2.Right)
+	return newTree
+
+}
+
+//1 +2 =  3
+// 3 + 1 = 4
+// 5 + 0 = 5
