@@ -3,8 +3,9 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{3, 2, 4}
-	fmt.Println(twoSum(nums, 6))
+	//nums := []int{3, 2, 4}
+	//fmt.Println(twoSum(nums, 6))
+	subSequences("abc", 0, "")
 }
 
 //1.Two Sum
@@ -31,4 +32,14 @@ func isPalindrome(x int) bool {
 	}
 	fmt.Println(reverse)
 	return x == reverse || x == reverse/10
+}
+
+// 打印一个字符串的所有子序列
+func subSequences(s string, idx int, res string) {
+	if idx == len(s) {
+		fmt.Printf("%s \n", res)
+		return
+	}
+	subSequences(s, idx+1, res)
+	subSequences(s, idx+1, res+string(s[idx]))
 }
