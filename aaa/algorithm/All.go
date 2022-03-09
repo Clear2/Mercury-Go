@@ -19,6 +19,8 @@ func twoSum(nums []int, target int) []int {
 	}
 	return nil
 }
+
+// 2.
 func isPalindrome(x int) bool {
 	if x < 0 || (x%10 == 0 && x != 0) {
 		return false
@@ -43,3 +45,6 @@ func subSequences(s string, idx int, res string) {
 	subSequences(s, idx+1, res)
 	subSequences(s, idx+1, res+string(s[idx]))
 }
+
+// 打印一个字符串的全排列
+// https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/

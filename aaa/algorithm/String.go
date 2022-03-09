@@ -27,7 +27,7 @@ func longestCommonPrefix(strs []string) string {
 	return prefix
 }
 
-// 求 str1 与 str2 的最长公共前缀
+// ICPrefixTwo 求 str1 与 str2 的最长公共前缀
 func ICPrefixTwo(str1, str2 string) string {
 	j := 0
 	for ; j < len(str1) && j < len(str2); j++ {

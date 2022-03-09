@@ -8,20 +8,6 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-func inorderTraverSal(root *TreeNode) []int {
-	var result []int
-	inorderRecursive(root, &result)
-	return result
-}
-
-func inorderRecursive(root *TreeNode, output *[]int) {
-	if root != nil {
-		inorderRecursive(root.Left, output)
-		*output = append(*output, root.Val)
-		inorderRecursive(root.Right, output)
-	}
-}
-
 func main() {
 	node4 := TreeNode{Val: 4}
 	node5 := TreeNode{Val: 5}
@@ -39,6 +25,20 @@ func main() {
 
 }
 
+func inorderTraverSal(root *TreeNode) []int {
+	var result []int
+	inorderRecursive(root, &result)
+	return result
+}
+
+func inorderRecursive(root *TreeNode, output *[]int) {
+	if root != nil {
+		inorderRecursive(root.Left, output)
+		*output = append(*output, root.Val)
+		inorderRecursive(root.Right, output)
+	}
+}
+
 /*
 	1
    /  \
@@ -46,6 +46,10 @@ func main() {
  / \   / \
 4   5 6   7
 */
+// 二叉树的递归遍历
+// 1.中序遍历-> https://leetcode.com/problems/binary-tree-inorder-traversal/
+// 2.前序遍历-> https://leetcode.com/problems/binary-tree-preorder-traversal/
+// 3.后序遍历-> https://leetcode.com/problems/binary-tree-postorder-traversal/
 func inorder(root *TreeNode) {
 	if root == nil {
 		return
@@ -57,6 +61,7 @@ func inorder(root *TreeNode) {
 	fmt.Println("c---->>", root.Val) // 4
 }
 
+// 相同的树-> https://leetcode.com/problems/same-tree/
 func isSameTree(p *TreeNode, q *TreeNode) bool {
 	if p == nil && q == nil {
 		return true
@@ -70,7 +75,7 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 	return false
 }
 
-// 合并两个二叉树
+// 合并两个二叉树-> https://leetcode.com/problems/merge-two-binary-trees/
 func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
 	if root1 == nil && root2 == nil {
 		return root1
