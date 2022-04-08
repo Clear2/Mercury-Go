@@ -5,23 +5,6 @@ import (
 	"sort"
 )
 
-// 合并两个数组合并以后有序
-//func merge(nums1 []int, m int, nums2 []int, n int) {
-//	var p1 = m - 1
-//	var p2 = n - 1
-//	p := m + n - 1
-//	for p2 >= 0 {
-//		if p1 >= 0 && nums1[p1] > nums2[p2] {
-//			nums1[p] = nums1[p1]
-//			p1--
-//		} else {
-//			nums1[p] = nums2[p2]
-//			p2--
-//		}
-//		p--
-//	}
-//}
-
 // 原地修改数组
 func removeDuplicates(nums []int) int {
 	if len(nums) == 0 {
@@ -49,15 +32,15 @@ func findRepeatNumber(nums []int) int {
 	return -1
 }
 func main() {
-	var num1 = []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}
+	//var num1 = []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}
 	//var num2 = []int{1}
 	//merge(num1, 1, num2, 1)
 	//fmt.Println(num1, num2)
-	length := removeDuplicates(num1)
-	fmt.Println(length)
+	//length := removeDuplicates(num1)
+	fmt.Println(letterCasePermutation("a1b2"))
 }
 
-// Merge Sorted Array
+// Merge Sorted Array -> https://leetcode.com/problems/merge-sorted-array/
 func merge(nums1 []int, m int, nums2 []int, n int) {
 	for n > 0 {
 		if m <= 0 || nums2[n-1] >= nums1[m-1] {
@@ -92,5 +75,50 @@ func dfs(res *[][]int, index int, nums []int) {
 		dfs(res, index+1, nums)
 		nums[i], nums[index] = nums[index], nums[i]
 		used[nums[i]] = true
+	}
+}
+
+//permutations => https://leetcode.com/problems/permutations/
+func permute(nums []int) [][]int {
+	var res [][]int
+	backtrack(&res, []int{}, nums)
+	return res
+}
+
+func backtrack(res *[][]int, ans []int, nums []int) {
+	if len(nums) == 0 {
+		*res = append(*res, ans)
+	}
+	for i, v := range nums {
+		newNumes := append(append([]int{}, nums[:i]...), nums[i+1:]...)
+		backtrack(res, append(ans, v), newNumes)
+	}
+}
+
+// Letter Case Permutation => https://leetcode.com/problems/letter-case-permutation/
+func letterCasePermutation(s string) []string {
+	res := []string{}
+	letterDFS(s, []byte{}, &res, 0)
+	return res
+}
+
+func letterDFS(s string, b []byte, res *[]string, pos int) {
+	if pos == len(s) {
+		*res = append(*res, string(b))
+		return
+	}
+	if s[pos] >= '0' && s[pos] <= '9' {
+		letterDFS(s, append(b, s[pos]), res, pos+1)
+		return
+	}
+	letterDFS(s, append(b, s[pos]), res, pos+1)
+	letterDFS(s, append(b, switchCase(s[pos])), res, pos+1)
+
+}
+func switchCase(b byte) byte {
+	if b >= 'a' && b <= 'z' {
+		return 'A' + (b - 'a')
+	} else {
+		return 'a' + (b - 'A')
 	}
 }

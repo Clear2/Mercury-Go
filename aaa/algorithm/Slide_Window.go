@@ -5,12 +5,13 @@ import "fmt"
 func main() {
 	fmt.Println(lengthOfLongestSubstring("abcabcbb"))
 }
-func maxInt(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
+
+//func maxInt(a, b int) int {
+//	if a > b {
+//		return a
+//	}
+//	return b
+//}
 func lengthOfLongestSubstring(s string) int {
 	n, ans := len(s), 0
 	m := make(map[byte]int)

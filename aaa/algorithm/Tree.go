@@ -8,21 +8,28 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
 func main() {
-	node4 := TreeNode{Val: 4}
-	node5 := TreeNode{Val: 5}
-	node6 := TreeNode{Val: 6}
+	//node4 := TreeNode{Val: 4}
+	//node5 := TreeNode{Val: 5}
+	node6 := TreeNode{Val: 15}
 	node7 := TreeNode{Val: 7}
-	node2 := TreeNode{Val: 2, Left: &node4, Right: &node5}
-	node3 := TreeNode{Val: 3, Left: &node6, Right: &node7}
-	node1 := TreeNode{Val: 1, Left: &node2, Right: &node3}
+	//node2 := TreeNode{Val: 9, Left: &node4, Right: &node5}
+	node2 := TreeNode{Val: 9}
+	node3 := TreeNode{Val: 20, Left: &node6, Right: &node7}
+	node1 := TreeNode{Val: 3, Left: &node2, Right: &node3}
 
-	nodeb := TreeNode{Val: 1, Left: &node2, Right: &node4}
+	//nodeb := TreeNode{Val: 1, Left: &node2, Right: &node4}
 	//inorder(&node1)
 	//result := inorderTraverSal(&node1)
 	//fmt.Println(result)
-	fmt.Println(mergeTrees(&node1, &nodeb))
-
+	//fmt.Println(mergeTrees(&node1, &nodeb))
+	fmt.Println(maxDepth(&node1))
 }
 
 func inorderTraverSal(root *TreeNode) []int {
@@ -94,6 +101,18 @@ func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
 
 }
 
-//1 +2 =  3
-// 3 + 1 = 4
-// 5 + 0 = 5
+// depthTree https://leetcode.com/problems/maximum-depth-of-binary-tree/
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	maxLeft := maxDepth(root.Left)
+	maxRight := maxDepth(root.Right)
+	v := maxInt(maxLeft, maxRight) + 1
+	return v
+}
+
+// 15
+// 20
+// 9
+// 3

@@ -5,7 +5,9 @@ id:=c.Query("id")
 page:=c.DefaultQuery("page", "0")               
 name:=c.PostForm("name")    
 ```
-
+#### go mod 更新
+go get -u       
+go mod tidy
 
 点击这个链接报名，然后登录极客时间app，就可以学习了哦[机智]：https://u.geekbang.org/subject/intro/1000832?key=ecf174408ad6705c4cd1e8ab8d6e05e8
 

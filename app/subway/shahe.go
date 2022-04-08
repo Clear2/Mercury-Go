@@ -122,7 +122,8 @@ func isLogin() {
 	body, err := utils.HTTPGet("https://webapi.mybti.cn/AppointmentRecord/GetCurrentAppointment", header)
 	if err != nil {
 		fmt.Println("登录状态失效---->>", err)
-		//res, err := utils.HTTPPost("https://webapi.mybti.cn/User/SignUp", )
+		fmt.Println("https://webui.mybti.cn/#/home/appoint")
+
 	}
 	var data interface{}
 	err = json.Unmarshal(body, &data)
