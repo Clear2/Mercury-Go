@@ -1,11 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	nums := []int{5, 7, 7, 8, 8, 8, 10}
+	nums := []int{1}
 	//a := search(nums, 4)
-	fmt.Printf("byte-->%d\n", searchRange(nums, 8))
+	fmt.Printf("byte-->%d\n", searchRangeTarget(nums, 1))
 }
 
 func search(nums []int, target int) int {
@@ -66,20 +68,52 @@ func searchRange(nums []int, target int) []int {
 
 	return ret
 }
-func searchRangeTarget(num []int, target, L, R int) []int {
-	mid := L + (R-L)>>1
-	if L >= R {
-		return []int{-1, -1}
+func searchRangeTarget(nums []int, target int) []int {
+	res := []int{-1, -1}
+	if len(nums) == 0 || nums == nil {
+		return res
 	}
-	if num[mid] == target {
-		return []int{mid, mid + 1}
+	l := findStartPosition(nums, target, 0, len(nums))
+	r := findEndPosition(nums, target, 0, len(nums))
+	if l >= r {
+		return res
 	}
-	if num[mid] > target {
-		return searchRangeTarget(num, target, L, mid-1)
-	}
-	return searchRangeTarget(num, target, mid+1, R)
+	return []int{l, r}
 }
 
+func findStartPosition(nums []int, target, L, R int) int {
+	for L < R {
+		mid := L + (R-L)>>1
+		if nums[mid] < target {
+			L = mid + 1
+		} else {
+			R = mid
+		}
+	}
+	return L
+}
+
+func findEndPosition(nums []int, target, L, R int) int {
+	//for L < R {
+	//	mid := L + (R-L)>>1
+	//	if nums[mid] < target {
+	//		L = mid + 1
+	//	} else {
+	//		R = mid - 1
+	//	}
+	//}
+	for L < R {
+		mid := L + (R-L)>>1 + 1
+		if nums[mid] > target {
+			R = mid - 1
+		} else {
+			L = mid
+		}
+	}
+	return R
+}
+
+// 0 1 2 3 4 0
 /**
  * Forward declaration of isBadVersion API.
  * @param   version   your guess about first bad version

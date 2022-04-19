@@ -8,7 +8,7 @@ func main() {
 	subSequences("abc", 0, "")
 }
 
-//1.Two Sum
+//1.Two Sum->https://leetcode.com/problems/two-sum/
 func twoSum(nums []int, target int) []int {
 	m := map[int]int{}
 	for i := 0; i < len(nums); i++ {
@@ -20,7 +20,6 @@ func twoSum(nums []int, target int) []int {
 	return nil
 }
 
-// 2.
 func isPalindrome(x int) bool {
 	if x < 0 || (x%10 == 0 && x != 0) {
 		return false
